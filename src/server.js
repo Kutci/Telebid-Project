@@ -303,7 +303,7 @@ const requestHandler = async (req, res) => {
             if (parsedUrl.pathname === "/api/update-profile") {
                 const cookies = utils.parseCookies(req);
                 if (!cookies.session_id) {
-                    res.writeHead(401);
+                    res.writeHead(401, { "content-type": "text/plain" });
                     res.end("Unauthorized");
                     return;
                 }
@@ -314,7 +314,7 @@ const requestHandler = async (req, res) => {
                     );
 
                     if (sessions.length === 0) {
-                        res.writeHead(401);
+                        res.writeHead(401, { "content-type": "text/plain" });
                         res.end("Session expired");
                         return;
                     }
@@ -322,7 +322,7 @@ const requestHandler = async (req, res) => {
                     const userId = sessions[0].user_id;
 
                     if (!utils.isValidName(data.firstName) || !utils.isValidName(data.lastName)) {
-                        res.writeHead(400);
+                        res.writeHead(400, { "content-type": "text/plain" });
                         res.end("Invalid names");
                         return;
                     }
