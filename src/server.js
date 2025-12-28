@@ -76,7 +76,7 @@ const requestHandler = async (req, res) => {
             const sessionId = cookies.session_id;
 
             if (!sessionId) {
-                res.writeHead(401, { "Content-Type": "application/json" });
+                res.writeHead(401, { "content-type": "application/json" });
                 res.end(JSON.stringify({ error: "Unauthorized" }));
                 return;
             }
@@ -91,16 +91,16 @@ const requestHandler = async (req, res) => {
                 );
 
                 if (rows.length === 0) {
-                    res.writeHead(401, { "Content-Type": "application/json" });
+                    res.writeHead(401, { "content-type": "application/json" });
                     res.end(JSON.stringify({ error: "Session expired" }));
                     return;
                 }
 
-                res.writeHead(200, { "Content-Type": "application/json" });
+                res.writeHead(200, { "content-type": "application/json" });
                 res.end(JSON.stringify(rows[0]));
             } catch (error) {
                 console.error("API User Error:", error);
-                res.writeHead(500, { "Content-Type": "application/json" });
+                res.writeHead(500, { "content-type": "application/json" });
                 res.end(JSON.stringify({ error: "Server error" }));
             }
             return;
