@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 module.exports = {
     isValidEmail: function (email) {
@@ -6,23 +6,23 @@ module.exports = {
     },
 
     isValidName: function (name) {
-        return typeof name === 'string' && name.trim().length >= 2;
+        return typeof name === "string" && name.trim().length >= 2;
     },
 
     isValidPassword: function (password) {
-        return typeof password === 'string' && password.length >= 6;
+        return typeof password === "string" && password.length >= 6;
     },
 
     hashPassword: function (password) {
-        return crypto.createHash('sha256').update(password).digest('hex');
+        return crypto.createHash("sha256").update(password).digest("hex");
     },
 
     generateSessionId: function () {
-        return crypto.randomBytes(16).toString('hex');
+        return crypto.randomBytes(16).toString("hex");
     },
 
     generateRandomCode: function (length = 6) {
-        return crypto.randomBytes(length).toString('hex').substring(0, length).toUpperCase();
+        return crypto.randomBytes(length).toString("hex").substring(0, length).toUpperCase();
     },
 
     parseCookies: function (request) {
@@ -41,11 +41,11 @@ module.exports = {
     generateCaptcha: function () {
         const width = 150;
         const height = 50;
-        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
         const length = 5;
 
-        let code = '';
-        let svgContent = '';
+        let code = "";
+        let svgContent = "";
 
         const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
         const randomColor = (min = 50, max = 150) => `rgb(${randomInt(min, max)}, ${randomInt(min, max)}, ${randomInt(min, max)})`;

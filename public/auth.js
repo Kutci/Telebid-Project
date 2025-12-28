@@ -37,8 +37,8 @@ registerForm.addEventListener("submit", async (e) => {
                 window.location.href = "/dashboard.html";
             }, 1000);
         } else {
-            document.getElementById('captcha-img').click();
-            document.getElementById('captcha-input').value = '';
+            document.getElementById("captcha-img").click();
+            document.getElementById("captcha-input").value = "";
         }
 
     } catch (error) {
