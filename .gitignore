@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Environment variables (Secrets)
+.env
+
+# Testing coverage reports
+coverage/
+
+# Misc
+.DS_Store
+npm-debug.log*
