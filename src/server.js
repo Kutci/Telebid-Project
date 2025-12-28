@@ -108,7 +108,7 @@ const requestHandler = async (req, res) => {
 
 
         if (parsedUrl.pathname === "/logout") {
-            res.writeHead(302, { "location": "/", "set-cookie": "session_id=; HttpOnly; Path/=; Max-Age=0" });
+            res.writeHead(302, { "location": "/", "set-cookie": "session_id=; HttpOnly; Path=/; Max-Age=0" });
             res.end();
             return;
         }
