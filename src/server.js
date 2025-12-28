@@ -393,7 +393,7 @@ const requestHandler = async (req, res) => {
                 return;
             }
 
-        })
+        });
     }
 
 }
