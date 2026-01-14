@@ -26,9 +26,11 @@ registerForm.addEventListener("submit", async (e) => {
             })
         });
 
-        const text = await res.text();
+        const data = await res.json();
 
-        result.textContent = text;
+        console.log(data);
+
+        result.textContent = data.message || data.error || "Something went wrong";
         result.style.color = res.ok ? "green" : "red";
 
         if (res.ok) {
@@ -42,6 +44,7 @@ registerForm.addEventListener("submit", async (e) => {
         }
 
     } catch (error) {
+        console.log(error);
         result.textContent = "Server error";
         result.style.color = "red";
     }
@@ -61,9 +64,9 @@ loginForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ email, password })
         });
 
-        const text = await res.text();
+        const data = await res.json();
 
-        loginResult.textContent = text;
+        loginResult.textContent = data.message || data.error || "Something went wrong";
         loginResult.style.color = res.ok ? "green" : "red";
 
         if (res.ok) {

@@ -63,8 +63,8 @@ const requestHandler = async (req, res) => {
                 }
             } catch (error) {
                 console.error("Auth error: ", error);
-                res.writeHead(500, { "content-type": "text/plain" });
-                res.end("Server error");
+                res.writeHead(500, { "content-type": "application/json" });
+                res.end(JSON.stringify({ error: "Server error" }));
                 return;
             }
         }
@@ -165,6 +165,7 @@ const requestHandler = async (req, res) => {
         });
 
     }
+
     if (method === "POST") {
         let body = "";
         req.on("data", chunk => body += chunk.toString());
@@ -178,8 +179,8 @@ const requestHandler = async (req, res) => {
                 const captchaToken = cookies.captcha_token;
 
                 if (!captchaToken || !data.captcha) {
-                    res.writeHead(400, { "content-type": "text/plain" });
-                    res.end("Please enter the captcha code");
+                    res.writeHead(400, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Please enter the captcha code" }));
                     return;
                 }
 
@@ -189,14 +190,14 @@ const requestHandler = async (req, res) => {
                 );
 
                 if (rows.length === 0) {
-                    res.writeHead(400, { "content-type": "text/plain" });
-                    res.end("Captcha expired. Please refresh the image.");
+                    res.writeHead(400, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Captcha expired. Please refresh the image." }));
                     return;
                 }
 
                 if (rows[0].code.toUpperCase() !== data.captcha.toUpperCase()) {
-                    res.writeHead(400, { "content-type": "text/plain" });
-                    res.end("Wrong Captcha Code");
+                    res.writeHead(400, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Wrong Captcha Code" }));
                     return;
                 }
 
@@ -204,20 +205,20 @@ const requestHandler = async (req, res) => {
 
 
                 if (!utils.isValidEmail(data.email)) {
-                    res.writeHead(400, { "content-type": "text/plain" });
-                    res.end("Invalid email");
+                    res.writeHead(400, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Invalid email" }));
                     return;
                 }
 
                 if (!utils.isValidName(data.firstName) || !utils.isValidName(data.lastName)) {
-                    res.writeHead(400, { "content-type": "text/plain" });
-                    res.end("First or last name is too short");
+                    res.writeHead(400, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "First or last name is too short" }));
                     return;
                 }
 
                 if (!utils.isValidPassword(data.password)) {
-                    res.writeHead(400, { "content-type": "text/plain" });
-                    res.end("Password is too short");
+                    res.writeHead(400, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Password is too short" }));
                     return;
                 }
 
@@ -242,15 +243,14 @@ const requestHandler = async (req, res) => {
 
 
                     res.writeHead(200, {
-                        "content-type": "text/plain",
+                        "content-type": "application/json",
                         "set-cookie": `session_id=${sessionId}; HttpOnly; Path=/; Max-Age=${24 * 60 * 60}`
                     });
-                    res.end("Successful Registration and Logged In");
-
+                    res.end(JSON.stringify({ message: "Registration successful" }));
                 } catch (error) {
                     console.error("DB ERROR:", error);
-                    res.writeHead(500, { "content-type": "text/plain" });
-                    res.end("Error in registration");
+                    res.writeHead(500, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Error in registration" }));
                 }
 
                 return;
@@ -262,8 +262,8 @@ const requestHandler = async (req, res) => {
                 );
 
                 if (users.length === 0) {
-                    res.writeHead(401, { "content-type": "text/plain" });
-                    res.end("Invalid email or password");
+                    res.writeHead(401, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Invalid email or password" }));
                     return;
                 }
 
@@ -272,8 +272,8 @@ const requestHandler = async (req, res) => {
                 const inputHash = utils.hashPassword(data.password);
 
                 if (inputHash !== user.password_hash) {
-                    res.writeHead(401, { "content-type": "text/plain" });
-                    res.end("Invalid password");
+                    res.writeHead(401, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Invalid password" }));
                     return;
                 }
 
@@ -287,14 +287,14 @@ const requestHandler = async (req, res) => {
                     );
 
                     res.writeHead(200, {
-                        "content-type": "text/plain",
+                        "content-type": "application/json",
                         "set-cookie": `session_id=${sessionId}; HttpOnly; Path=/; Max-Age=${24 * 60 * 60}`
                     });
-                    res.end("Login Successful");
+                    res.end(JSON.stringify({ message: "Login successful" }));
                 } catch (error) {
                     console.error("Session DB Error", error);
-                    res.writeHead(500, { "content-type": "text/plain" });
-                    res.end("Server error during login");
+                    res.writeHead(500, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Server error during login" }));
                 }
 
                 return;
@@ -303,8 +303,8 @@ const requestHandler = async (req, res) => {
             if (parsedUrl.pathname === "/api/update-profile") {
                 const cookies = utils.parseCookies(req);
                 if (!cookies.session_id) {
-                    res.writeHead(401, { "content-type": "text/plain" });
-                    res.end("Unauthorized");
+                    res.writeHead(401, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Unauthorized" }));
                     return;
                 }
 
@@ -314,16 +314,16 @@ const requestHandler = async (req, res) => {
                     );
 
                     if (sessions.length === 0) {
-                        res.writeHead(401, { "content-type": "text/plain" });
-                        res.end("Session expired");
+                        res.writeHead(401, { "content-type": "application/json" });
+                        res.end(JSON.stringify({ error: "Session expired" }));
                         return;
                     }
 
                     const userId = sessions[0].user_id;
 
                     if (!utils.isValidName(data.firstName) || !utils.isValidName(data.lastName)) {
-                        res.writeHead(400, { "content-type": "text/plain" });
-                        res.end("Invalid names");
+                        res.writeHead(400, { "content-type": "application/json" });
+                        res.end(JSON.stringify({ error: "Invalid names" }));
                         return;
                     }
 
@@ -331,12 +331,12 @@ const requestHandler = async (req, res) => {
                         `UPDATE users SET first_name = ?, last_name = ? WHERE id = ?`, [data.firstName, data.lastName, userId]
                     );
 
-                    res.writeHead(200, { "content-type": "text/plain" });
-                    res.end("Profile Updated Successfully");
+                    res.writeHead(200, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ message: "Profile Updated Successfully" }));
                 } catch (error) {
                     console.error("Update error occured: ", error);
-                    res.writeHead(500, { "content-type": "text/plain" });
-                    res.end("Database error");
+                    res.writeHead(500, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Database error" }));
                 }
                 return;
             }
@@ -344,8 +344,8 @@ const requestHandler = async (req, res) => {
             if (parsedUrl.pathname === "/api/update-password") {
                 const cookies = utils.parseCookies(req);
                 if (!cookies.session_id) {
-                    res.writeHead(401, { "content-type": "text/plain" });
-                    res.end("Unauthorized");
+                    res.writeHead(401, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Unauthorized" }));
                     return;
                 }
 
@@ -358,8 +358,8 @@ const requestHandler = async (req, res) => {
                     );
 
                     if (rows.length === 0) {
-                        res.writeHead(401, { "content-type": "text/plain" });
-                        res.end("Session expired");
+                        res.writeHead(401, { "content-type": "application/json" });
+                        res.end(JSON.stringify({ error: "Session expired" }));
                         return;
                     }
 
@@ -367,14 +367,14 @@ const requestHandler = async (req, res) => {
 
                     const oldHash = utils.hashPassword(data.oldPassword);
                     if (oldHash !== user.password_hash) {
-                        res.writeHead(401, { "content-type": "text/plain" });
-                        res.end("Old password is incorrect");
+                        res.writeHead(401, { "content-type": "application/json" });
+                        res.end(JSON.stringify({ error: "Old password is incorrect" }));
                         return;
                     }
 
                     if (!utils.isValidPassword(data.newPassword)) {
-                        res.writeHead(401, { "content-type": "text/plain" });
-                        res.end("New password is too leak");
+                        res.writeHead(401, { "content-type": "application/json" });
+                        res.end(JSON.stringify({ error: "New password is too leak" }));
                         return;
                     }
 
@@ -382,12 +382,12 @@ const requestHandler = async (req, res) => {
                     await db.execute(
                         `UPDATE users SET password_hash = ? WHERE id = ?`, [newHash, user.id]
                     );
-                    res.writeHead(200, { "content-type": "text/plain" });
-                    res.end("Password Changed Successfully");
+                    res.writeHead(200, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ message: "Password Changed Successfully" }));
                 } catch (error) {
                     console.error("Update Password error: ", error);
-                    res.writeHead(500, { "content-type": "text/plain" });
-                    res.end("Database error");
+                    res.writeHead(500, { "content-type": "application/json" });
+                    res.end(JSON.stringify({ error: "Database error" }));
                 }
 
                 return;

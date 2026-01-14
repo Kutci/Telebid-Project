@@ -34,9 +34,9 @@ profileForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ firstName, lastName })
         });
 
-        const text = await res.text();
+        const data = await res.json();
 
-        profileResult.textContent = text;
+        profileResult.textContent = data.message || data.error || "Something went wrong";
         profileResult.style.color = res.ok ? "green" : "red";
 
         if (res.ok) {
@@ -64,9 +64,9 @@ passwordForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ oldPassword, newPassword })
         });
 
-        const text = await res.text();
+        const data = await res.json();
 
-        passwordResult.textContent = text;
+        passwordResult.textContent = data.message || data.error || "Something went wrong";
         passwordResult.style.color = res.ok ? "green" : "red";
 
         if (res.ok) {
